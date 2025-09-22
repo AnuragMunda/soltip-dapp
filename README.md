@@ -1,8 +1,8 @@
 # Project Description
 
-**Deployed Frontend URL:** [SOLTIP DApp](https://soltip-liart.vercel.app/)
+**Deployed Frontend URL:** [SOLTIP DApp](https://soltip-dapp.vercel.app/)
 
-**Solana Program ID:** 6MHsoPmdb4qzGd9HdXNpESTK65hBk8Y3FW2RbyDxZH6f
+**Solana Program ID:** FSdbkauyRWpQJBkCudZchif2rKfHnTrZr129BykFYzbs
 
 ## Project Overview
 
