@@ -1,70 +1,56 @@
 #![allow(clippy::result_large_err)]
 
+use crate::instructions::*;
 use anchor_lang::prelude::*;
 
-declare_id!("Count3AcZucFDPSFBAeHkQ6AvttieKUkyJ8HiQGhQwe");
+pub mod utils;
+pub mod instructions;
+pub mod states;
+
+declare_id!("FSdbkauyRWpQJBkCudZchif2rKfHnTrZr129BykFYzbs");
 
 #[program]
-pub mod counter {
+pub mod soltip {
     use super::*;
 
-    pub fn close(_ctx: Context<CloseCounter>) -> Result<()> {
-        Ok(())
+    pub fn initialize_profile(
+        ctx: Context<InitializeCreatorProfile>,
+        name: String,
+        email: String,
+        bio: String,
+        about_me: String,
+    ) -> Result<()> {
+        initialize_creator_profile(ctx, name, email, bio, about_me)
     }
 
-    pub fn decrement(ctx: Context<Update>) -> Result<()> {
-        ctx.accounts.counter.count = ctx.accounts.counter.count.checked_sub(1).unwrap();
-        Ok(())
+    pub fn update_profile(
+        ctx: Context<UpdateCreatorProfile>,
+        name: Option<String>,
+        email: Option<String>,
+        bio: Option<String>,
+        about_me: Option<String>,
+    ) -> Result<()> {
+        update_creator_profile(ctx, name, email, bio, about_me)
     }
 
-    pub fn increment(ctx: Context<Update>) -> Result<()> {
-        ctx.accounts.counter.count = ctx.accounts.counter.count.checked_add(1).unwrap();
-        Ok(())
+    pub fn close_profile(ctx: Context<CloseCreatorProfile>) -> Result<()> {
+        close_creator_profile(ctx)
     }
 
-    pub fn initialize(_ctx: Context<InitializeCounter>) -> Result<()> {
-        Ok(())
+    pub fn set_coin_value(ctx: Context<UpdateCoinValue>, value: u64) -> Result<()> {
+        update_coin_value(ctx, value)
     }
 
-    pub fn set(ctx: Context<Update>, value: u8) -> Result<()> {
-        ctx.accounts.counter.count = value.clone();
-        Ok(())
+    pub fn withdraw_coins(ctx: Context<WithdrawFunds>) -> Result<()> {
+        withdraw_funds(ctx)
     }
-}
 
-#[derive(Accounts)]
-pub struct InitializeCounter<'info> {
-    #[account(mut)]
-    pub payer: Signer<'info>,
-
-    #[account(
-  init,
-  space = 8 + Counter::INIT_SPACE,
-  payer = payer
-    )]
-    pub counter: Account<'info, Counter>,
-    pub system_program: Program<'info, System>,
-}
-#[derive(Accounts)]
-pub struct CloseCounter<'info> {
-    #[account(mut)]
-    pub payer: Signer<'info>,
-
-    #[account(
-  mut,
-  close = payer, // close account and return lamports to payer
-    )]
-    pub counter: Account<'info, Counter>,
-}
-
-#[derive(Accounts)]
-pub struct Update<'info> {
-    #[account(mut)]
-    pub counter: Account<'info, Counter>,
-}
-
-#[account]
-#[derive(InitSpace)]
-pub struct Counter {
-    count: u8,
+    pub fn support_creator(
+        ctx: Context<TipCreator>,
+        amount: u64,
+        name: Option<String>,
+        message: Option<String>
+    ) -> Result<()> {
+        tip_creator(ctx, amount, name, message)
+    }
 }
