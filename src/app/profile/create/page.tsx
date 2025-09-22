@@ -9,7 +9,6 @@ import Form from 'next/form'
 import { useWallet } from "@solana/wallet-adapter-react"
 import { WalletNotConnectedError } from "@solana/wallet-adapter-base"
 import { useSoltipProgram } from "@/components/soltip/soltip-data-access"
-import { toast } from "sonner"
 
 const CreateProfile = () => {
   const { publicKey } = useWallet()

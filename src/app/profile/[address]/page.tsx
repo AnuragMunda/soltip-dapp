@@ -22,8 +22,6 @@ export default function Page() {
   const path = usePathname()
   const { connection } = useConnection()
 
-  if (!userAddress) return <h1>Incorrect address</h1>
-
   const [coinAmount, setCoinAmount] = useState('')
   const [currentCoinValue, setCurrentCoinValue] = useState('0')
   const [name, setName] = useState<string>('')
@@ -67,6 +65,7 @@ export default function Page() {
 
   const fetchProfile = async () => {
     try {
+      if (!userAddress) return
       const _profile = await getCreatorProfile(new PublicKey(userAddress.toString()))
       if (_profile) {
         setProfile({
@@ -82,6 +81,7 @@ export default function Page() {
 
   const fetchSupporters = async () => {
     try {
+      if (!userAddress) return
       const result = await program.account.supporter.all([{ memcmp: { offset: 12, bytes: (new PublicKey(userAddress).toBase58()) } }])
       if (result.length > 0) {
         setSupporters(
@@ -115,6 +115,8 @@ export default function Page() {
     }
     loadProfile()
   }, [userAddress, router])
+
+  if (!userAddress) return <h1>Incorrect address</h1>
 
   return (
     <section className="w-full mt-10">

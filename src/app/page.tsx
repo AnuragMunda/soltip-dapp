@@ -35,7 +35,7 @@ export default function Home() {
       ) : (
         <>
           <h1 className="text-6xl font-bold">Fund your creative work</h1>
-          <h2 className="text-2xl font-light tracking-wide">Accept support. Start receiving Solana. It's easier than you think.</h2>
+          <h2 className="text-2xl font-light tracking-wide">Accept support. Start receiving Solana. It&apos;s easier than you think.</h2>
           {publicKey ? (
             <Link href={hasProfile ? `/profile/${publicKey}` : '/profile/create'}>
               <Button className="text-2xl font-bold p-9 rounded-full">
