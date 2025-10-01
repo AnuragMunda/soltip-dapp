@@ -1,32 +1,27 @@
 'use client'
 
 import { useSoltipProgram } from "@/components/soltip/soltip-data-access"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { useConnection, useWallet } from "@solana/wallet-adapter-react"
-import { LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js"
-import { Coins } from "lucide-react"
-import Link from "next/link"
-import { useParams, usePathname, useRouter } from "next/navigation"
+import { useConnection } from "@solana/wallet-adapter-react"
+import { PublicKey } from "@solana/web3.js"
+import { useParams, useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
-import { toast } from "sonner"
-import copy from 'copy-to-clipboard'
 import { checkProfile } from "@/lib/utils"
+import ProfileTabs from "@/components/profile-tabs"
+import ProfileOverview from "@/components/profile-overview"
+import { SiSolana } from "react-icons/si";
 
 export default function Page() {
-  const { getCreatorProfile, setCoinValue, withdrawFunds, supportCreator, programId, program } = useSoltipProgram()
-  const { publicKey } = useWallet()
+  const { getCreatorProfile, programId, program } = useSoltipProgram()
   const params = useParams()
   const router = useRouter()
   const userAddress = params.address
-  const path = usePathname()
   const { connection } = useConnection()
 
+  const [currentCoinValue, setCurrentCoinValue] = useState('')
   const [coinAmount, setCoinAmount] = useState('')
-  const [currentCoinValue, setCurrentCoinValue] = useState('0')
   const [name, setName] = useState<string>('')
   const [message, setMessage] = useState<string>('')
-  const [loading, setLoading] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(true)
 
   const [profile, setProfile] = useState<{
     creator: PublicKey | null,
@@ -54,14 +49,6 @@ export default function Page() {
     tip: number,
     message: string
   }[]>([])
-
-  const calculateSolAmount = (amount: number) => {
-    return parseFloat((amount * parseCoinValue(profile.coinValue)).toFixed(4))
-  }
-
-  const parseCoinValue = (value: number) => {
-    return value / LAMPORTS_PER_SOL
-  }
 
   const fetchProfile = async () => {
     try {
@@ -99,6 +86,22 @@ export default function Page() {
     }
   }
 
+  const setAName = (name: string) => {
+    setName(name);
+  }
+
+  const setAMessage = (message: string) => {
+    setMessage(message);
+  }
+
+  const setCoinValue = (value: string) => {
+    setCurrentCoinValue(value);
+  }
+
+  const setNumberOfCoins = (value: string) => {
+    setCoinAmount(value);
+  }
+
   useEffect(() => {
     const loadProfile = async () => {
       setLoading(true)
@@ -119,158 +122,46 @@ export default function Page() {
   if (!userAddress) return <h1>Incorrect address</h1>
 
   return (
-    <section className="w-full mt-10">
+    <section className={`min-h-screen w-full ${loading ? 'bg-radial from-fuchsia-300 via-purple-400 to-white bg-auto' : 'bg-[#F5F5F4]'}`}>
       {loading ? (
-        <h1 className="flex justify-center items-center text-4xl">Loading...</h1>
+        <div className="w-full min-h-screen flex items-center justify-center">
+          <SiSolana size={110} className="animate-spin" />
+        </div>
       ) : (
-        <div className="flex justify-center gap-5">
-          <div className="border-3 rounded-3xl flex-1 flex flex-col gap-5 px-5 py-7">
-            <div className="relative flex flex-col gap-5 pb-5 border-b-2">
-              <div className="absolute right-0 self-center flex gap-2">
-                <Button onClick={() => {
-                  copy(`${window.location.host}${path}`)
-                  toast.success('Link copied')
-                }}>Copy link</Button>
-                {publicKey && profile.creator && publicKey.equals(profile.creator) && (
-                  <Link href='/profile/update'>
-                    <Button>Edit</Button>
-                  </Link>
-                )}
-              </div>
-              <div className="flex flex-col gap-0.5">
-                <h2 className="text-2xl font-bold tracking-wide">{profile.name}</h2>
-                <p className="dark:text-gray-400 text-gray-600 font-semibold text-xl">{profile.bio}</p>
-              </div>
-              <p className="text-md tracking-wide">{profile.aboutMe}</p>
-              <span className="text-sm border px-2 py-3 bg-black text-white dark:text-black rounded-lg w-[50%] text-center font-semibold dark:bg-white">{`Contact: ${profile.email}`}</span>
-            </div>
-            <div>
-              <h2 className="text-xl font-semibold mb-6 tracking-wide">Recent Supporters</h2>
-              <div className="flex flex-col gap-6">
-                {supporters && supporters?.length != 0 ? (
-                  <>
-                    {supporters
-                      .slice()
-                      .sort((a, b) => b.id - a.id)
-                      .map((supporter) => (
-                        <div key={supporter.id} className="flex flex-col gap-3">
-                          <span className="flex gap-2 items-center">
-                            <Coins />
-                            <h3>{`${!supporter.name || supporter.name === '' ? 'Anonymous' : supporter.name} donated ${parseCoinValue(supporter.tip)} SOL`}</h3>
-                          </span>
-                          {supporter.message && (
-                            <p className="bg-[#FFEFEF] rounded-lg text-black px-4 py-3">
-                              {supporter.message}
-                            </p>
-                          )}
-                        </div>
-                      ))}
-                  </>
-                ) : (
-                  <h1>
-                    No supporters.
-                  </h1>
-                )}
+        <div className="md:h-screen md:flex md:flex-col md:gap-2">
+          <div className="bg-[url('/bg-image-wide.png')] bg-contain md:bg-cover h-72 md:h-40 bg-no-repeat bg-fixed" />
 
-              </div>
+          {/* Main section */}
+          <div className="md:h-full px-3 md:px-20 md:flex md:flex-col md:gap-4">
+            <h2 className="text-4xl md:text-5xl text-center pt-4 pb-7 font-extrabold bg-linear-to-r from-pink-500 to-violet-500 bg-clip-text text-transparent">
+              {profile.name}
+            </h2>
+
+            <div className="md:flex h-[80%] md:gap-15">
+              {/* Profile Overview */}
+              <ProfileOverview profile={profile} />
+
+              {/* Profile Tabs */}
+              <div className="my-10 md:my-0 md:flex-1">
+                <ProfileTabs 
+                profile={profile} 
+                supporters={supporters}
+                name={name}
+                message={message}
+                currentCoinValue={currentCoinValue}
+                coinAmount={coinAmount}
+                fetchProfile={fetchProfile}
+                fetchSupporters={fetchSupporters}
+                setName={setAName}
+                setMessage={setAMessage}
+                setCurrentCoinValue={setCoinValue}
+                setCoinAmount={setNumberOfCoins}
+              />
             </div>
           </div>
-          {publicKey && profile.creator && publicKey.equals(profile.creator) ? (
-            <div className="w-full border-3 rounded-3xl flex-1 px-5 py-7 flex flex-col gap-10">
-              <h2 className="text-xl font-semibold tracking-wide border-b-2 pb-5">Vault</h2>
-              <div className="flex flex-col gap-10">
-                <div className="flex flex-col gap-5 border-b-2 pb-10">
-                  <div className="bg-[#FFF7F7] border border-[#FF5F5F] py-5 px-3 rounded-xl dark:text-black">{`Funds available: ${parseCoinValue(profile.fund)} SOL`}</div>
-                  <Button className="rounded-full py-6 text-md" disabled={withdrawFunds.isPending}
-                    onClick={async () => {
-                      if (Number(profile.fund) === 0) {
-                        toast.error('No fund available')
-                        return
-                      }
-                      await withdrawFunds.mutateAsync(publicKey)
-                      fetchProfile()
-                    }}>
-                    {withdrawFunds.isPending ? 'Processing...' : 'Withdraw Funds'}
-                  </Button>
-                </div>
-                <div className="flex flex-col gap-5">
-                  <div className="bg-[#FFF7F7] border border-[#FF5F5F] py-5 px-3 rounded-xl dark:text-black">{`Current coin value: ${parseCoinValue(profile.coinValue)} SOL`}</div>
-                  <Input type="number" className="p-3 h-12" placeholder="Enter coin value" value={currentCoinValue} onChange={(e) => setCurrentCoinValue(e.target.value)} />
-                  <Button className="rounded-full py-6 text-md" disabled={setCoinValue.isPending}
-                    onClick={async () => {
-                      if (parseFloat(currentCoinValue) < 0.0001) {
-                        toast.error('Atleast 0.0001 SOL')
-                        return
-                      }
-                      await setCoinValue.mutateAsync({ creator: publicKey, value: parseFloat(currentCoinValue) })
-                      setCurrentCoinValue('0')
-                      fetchProfile()
-                    }}>
-                    {setCoinValue.isPending ? 'Processing...' : 'Change coin value'}
-                  </Button>
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div className="w-full border-3 rounded-3xl flex-1 px-5 py-7">
-              <div className="flex flex-col gap-5">
-                <h2 className="text-xl font-semibold tracking-wide">{`Support ${profile.name}`}</h2>
-                <div className="bg-[#FFF7F7] dark:text-black border border-[#FF5F5F] py-5 px-3 rounded-xl">{`1 Coin = ${parseCoinValue(profile.coinValue)} SOL`}</div>
-                <div className="flex flex-col gap-5">
-                  <Input
-                    type="number"
-                    className="p-3 h-12"
-                    placeholder="Number of coins to donate"
-                    value={coinAmount}
-                    onChange={(e) => setCoinAmount(e.target.value)}
-                  />
-                  <Input className="p-3 h-12" placeholder="Your name" onChange={(e) => setName(e.target.value)} />
-                  <textarea className="h-40 border p-2 rounded-xl" placeholder="Say something nice..." onChange={(e) => setMessage(e.target.value)} />
-                  <Button className="rounded-full py-6 text-md" disabled={supportCreator.isPending}
-                    onClick={async () => {
-                      const coin = Number(coinAmount)
-                      if (!publicKey) {
-                        toast.error('Connect wallet first')
-                        return
-                      }
-                      if (!profile.creator) {
-                        toast.error('Invalid profile')
-                        return
-                      }
-                      if (!Number.isInteger(coin) || coin <= 0) {
-                        toast.error('Amount must be a positive integer')
-                        return
-                      }
-                      const amount = calculateSolAmount(coin)
-                      const supporterName = name.trim() === '' ? null : name.trim()
-                      const supporterMsg = message.trim() === '' ? null : message.trim()
-
-                      await supportCreator.mutateAsync({
-                        supporter: publicKey,
-                        creatorPubKey: profile.creator,
-                        amount,
-                        name: supporterName,
-                        message: supporterMsg
-                      })
-                      await fetchSupporters()
-
-                      setCoinAmount('')
-                      setName('')
-                      setMessage('')
-                    }}
-                  >
-                    {supportCreator.isPending ? 'Processing...'
-                      : (
-                        `Support ${Number(coinAmount) === 0 ? ''
-                          : `${calculateSolAmount(parseInt(coinAmount))} SOL`}`
-                      )}
-                  </Button>
-                </div>
-              </div>
-            </div>
-          )}
+          </div>
         </div>
-      )}
-    </section>
+  )}
+  </section>
   )
 }

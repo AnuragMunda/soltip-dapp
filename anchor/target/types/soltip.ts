@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/soltip.json`.
  */
 export type Soltip = {
-  "address": "FSdbkauyRWpQJBkCudZchif2rKfHnTrZr129BykFYzbs",
+  "address": "9UXhm3zakFtqXYYgEuT2VQhhp7ots23N52PHKxynFCZ9",
   "metadata": {
     "name": "soltip",
     "version": "0.1.0",

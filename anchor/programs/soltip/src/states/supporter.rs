@@ -2,8 +2,8 @@ use anchor_lang::prelude::*;
 
 use crate::utils::errors::SupporterError;
 
-pub const SUPPORTER_NAME_LENGTH: usize = 30;
-pub const MESSAGE_LENGTH: usize = 250;
+pub const SUPPORTER_NAME_LENGTH: usize = 50;
+pub const MESSAGE_LENGTH: usize = 300;
 
 pub const SUPPORTER_SEED: &str = "SUPPORTER";
 

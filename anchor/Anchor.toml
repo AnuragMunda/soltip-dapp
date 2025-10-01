@@ -6,10 +6,10 @@ resolution = true
 skip-lint = false
 
 [programs.localnet]
-counter = "FSdbkauyRWpQJBkCudZchif2rKfHnTrZr129BykFYzbs"
+soltip = "9UXhm3zakFtqXYYgEuT2VQhhp7ots23N52PHKxynFCZ9"
 
 [programs.devnet]
-counter = "FSdbkauyRWpQJBkCudZchif2rKfHnTrZr129BykFYzbs"
+soltip = "9UXhm3zakFtqXYYgEuT2VQhhp7ots23N52PHKxynFCZ9"
 
 [registry]
 url = "https://api.apr.dev"

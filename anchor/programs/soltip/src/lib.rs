@@ -7,7 +7,7 @@ pub mod utils;
 pub mod instructions;
 pub mod states;
 
-declare_id!("FSdbkauyRWpQJBkCudZchif2rKfHnTrZr129BykFYzbs");
+declare_id!("9UXhm3zakFtqXYYgEuT2VQhhp7ots23N52PHKxynFCZ9");
 
 #[program]
 pub mod soltip {

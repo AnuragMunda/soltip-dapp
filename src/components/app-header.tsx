@@ -1,14 +1,15 @@
 'use client'
+
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Menu, X } from 'lucide-react'
-import { ThemeSelect } from '@/components/theme-select'
 import { WalletButton } from '@/components/solana/solana-provider'
 import { useConnection, useWallet } from "@solana/wallet-adapter-react"
 import { checkProfile } from '@/lib/utils'
 import { useSoltipProgram } from './soltip/soltip-data-access'
+import Image from 'next/image'
 
 export function AppHeader({ links = [] }: { links: { label: string; path: string }[] }) {
   const pathname = usePathname()
@@ -34,14 +35,19 @@ export function AppHeader({ links = [] }: { links: { label: string; path: string
   }, [publicKey])
 
   return (
-    <header className="relative z-50 px-6 py-5 dark:text-neutral-400">
-      <div className="mx-auto flex items-center">
-        <div className="flex-1">
-          <Link href="/" className='text-2xl font-bold tracking-widest hover:text-neutral-500 dark:hover:text-white'>SOLTIP</Link>
+    <header className="w-full max-w-screen dark:text-neutral-400 fixed md:flex md:justify-center md:mt-3">
+      <div className={`${pathname.startsWith('/profile') ? 'bg-white/90 border border-black' : 'bg-white/60'} md:w-[60%] mx-5 mt-2 px-5 py-2 md:py-3 rounded-2xl flex items-center justify-between`}>
+        {/* Logo */}
+        <div>
+          <Link href="/" className='cursor-pointer'>
+            <Image src='/soltip-logo.png' alt='SolTip Logo' width={100} height={60} />
+          </Link>
         </div>
-        <div className="flex flex-1 items-baseline justify-center gap-4">
+
+        {/* Navigation */}
+        <div className="md:flex items-baseline justify-center hidden">
           <div className="hidden md:flex items-center">
-            <ul className="flex gap-4 flex-nowrap items-center text-xl tracking-wider font-bold">
+            <ul className="flex gap-4 md:gap-10 flex-nowrap items-center text-xl tracking-wider font-bold">
               {links.map(({ label, path }) => (
                 label !== 'Profile' ? (
                   <li key={path}>
@@ -70,24 +76,25 @@ export function AppHeader({ links = [] }: { links: { label: string; path: string
           </div>
         </div>
 
-        <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setShowMenu(!showMenu)}>
-          {showMenu ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-        </Button>
+        {/* Wallet and mobile menu */}
+        <div className='flex gap-4'>
+          <div className="flex items-center gap-4">
+            <WalletButton />
+          </div>
 
-        <div className="hidden md:flex items-center gap-4 flex-1 md:justify-end">
-          <WalletButton />
-          {/* <ClusterUiSelect /> */}
-          <ThemeSelect />
+          <Button variant="ghost" size="icon" className="md:hidden ml-2" onClick={() => setShowMenu(!showMenu)}>
+            {showMenu ? <X height={20} width={20} /> : <Menu height={20} width={200} className='w-full' />}
+          </Button>
         </div>
 
         {showMenu && (
-          <div className="md:hidden fixed inset-x-0 top-[52px] bottom-0 bg-neutral-100/95 dark:bg-neutral-900/95 backdrop-blur-sm">
-            <div className="flex flex-col p-4 gap-4 border-t dark:border-neutral-800">
-              <ul className="flex flex-col gap-4">
+          <div className="md:hidden fixed top-18 left-5 rounded-2xl w-[88%] bg-neutral-100/95 backdrop-blur-sm">
+            <div className="flex flex-col p-8 gap-4">
+              <ul className="flex flex-col items-center gap-4">
                 {links.map(({ label, path }) => (
                   <li key={path}>
                     <Link
-                      className={`hover:text-neutral-500 dark:hover:text-white block text-lg py-2  ${isActive(path) ? 'text-neutral-500 dark:text-white' : ''} `}
+                      className={`hover:text-neutral-500 text-xl font-bold py-2  ${isActive(path) ? 'text-neutral-500' : ''} `}
                       href={path}
                       onClick={() => setShowMenu(false)}
                     >
@@ -96,11 +103,6 @@ export function AppHeader({ links = [] }: { links: { label: string; path: string
                   </li>
                 ))}
               </ul>
-              <div className="flex flex-col gap-4">
-                <WalletButton />
-                {/* <ClusterUiSelect /> */}
-                <ThemeSelect />
-              </div>
             </div>
           </div>
         )}

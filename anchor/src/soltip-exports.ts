@@ -21,7 +21,7 @@ export function getSoltipProgramId(cluster: Cluster) {
     case 'devnet':
     case 'testnet':
       // This is the program ID for the Soltip program on devnet and testnet.
-      return new PublicKey('FSdbkauyRWpQJBkCudZchif2rKfHnTrZr129BykFYzbs')
+      return new PublicKey('9UXhm3zakFtqXYYgEuT2VQhhp7ots23N52PHKxynFCZ9')
     case 'mainnet-beta':
     default:
       return SOLTIP_PROGRAM_ID

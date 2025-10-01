@@ -2,7 +2,7 @@ use anchor_lang::prelude::*;
 
 use crate::utils::errors::ProfileError;
 
-pub const NAME_LENGTH: usize = 30;
+pub const NAME_LENGTH: usize = 50;
 pub const BIO_LENGTH: usize = 150;
 pub const EMAIL_LENGTH: usize = 64;
 pub const ABOUT_ME_LENGTH: usize = 500;

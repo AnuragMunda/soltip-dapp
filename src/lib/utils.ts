@@ -1,4 +1,4 @@
-import { Connection, PublicKey } from '@solana/web3.js'
+import { Connection, LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js'
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 
@@ -26,3 +26,12 @@ export const checkProfile = async (programId: PublicKey, creator: PublicKey | st
   const accountInfo = await connection.getAccountInfo(profilePDA)
   return accountInfo?.data != null
 }
+
+export const parseCoinValue = (value: number) => {
+    return value / LAMPORTS_PER_SOL
+}
+
+export const calculateSolAmount = (amount: number, coinValue: number) => {
+  console.log(parseFloat((amount * parseCoinValue(coinValue)).toFixed(4)))
+    return parseFloat((amount * parseCoinValue(coinValue)).toFixed(4))
+  }
