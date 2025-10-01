@@ -11,7 +11,7 @@ export function AppLayout({
   children: React.ReactNode
 }) {
   return (
-    <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+    <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
       <div className="flex flex-col min-h-screen min-w-screen">
         <main className="flex-grow w-full">
           {children}
