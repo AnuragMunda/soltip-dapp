@@ -92,7 +92,8 @@ export function AppHeader({ links = [] }: { links: { label: string; path: string
             <div className="flex flex-col p-8 gap-4">
               <ul className="flex flex-col items-center gap-4">
                 {links.map(({ label, path }) => (
-                  <li key={path}>
+                  label !== 'Profile' ? (
+                    <li key={path}>
                     <Link
                       className={`hover:text-neutral-500 text-xl font-bold py-2  ${isActive(path) ? 'text-neutral-500' : ''} `}
                       href={path}
@@ -101,6 +102,19 @@ export function AppHeader({ links = [] }: { links: { label: string; path: string
                       {label}
                     </Link>
                   </li>
+                  ) : (
+                    publicKey && hasProfile && (
+                      <li key={path}>
+                    <Link
+                      className={`hover:text-neutral-500 text-xl font-bold py-2  ${isActive(path) ? 'text-neutral-500' : ''} `}
+                      href={path}
+                      onClick={() => setShowMenu(false)}
+                    >
+                      {label}
+                    </Link>
+                  </li>
+                    )
+                  ) 
                 ))}
               </ul>
             </div>
